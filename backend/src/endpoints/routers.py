@@ -10,6 +10,8 @@ import copy
 import json
 import tempfile
 from pathlib import Path
+import tempfile
+
 
 # Schemas
 from src.schemas import FunctionCall
@@ -50,10 +52,9 @@ def create_router(handler: MainHandler, CONFIG):
         
         if prompt_request.function_call:
             functions = prompt_handler.get_functions()
-            print(functions)
         
         try:
-            #Calls the main chat completion function
+            # Calls the main chat completion function
             prompt_response = await openai_service.chat_completion(
                 messages=messages,
                 CONFIG=CONFIG,
@@ -83,22 +84,24 @@ def create_router(handler: MainHandler, CONFIG):
         # Configuring functions to be called - it should match the get_functions_signatures, otherwise we need to bypass it
         available_functions = {
             # Obs: all functions need to be async
-            "get_restaurant_pages": lambda kwargs: functions.find_restaurant_pages(CONFIG=CONFIG, **kwargs),
-            "open_restaurant_page": lambda kwargs: functions.open_restaurant_page(CONFIG=CONFIG, **kwargs),
-            "close_restaurant_page": lambda _: functions.dummy_function(), # dummy function - no need of information
-            "get_user_actions": lambda _: functions.dummy_function(), # dummy function - actions are stored in the frontend
-            "get_menu_of_restaurant": lambda kwargs: functions.get_menu_of_restaurant(CONFIG=CONFIG, **kwargs),
-            "add_food_to_cart": lambda kwargs: functions.add_food_to_cart(CONFIG=CONFIG, **kwargs),
-            "remove_food_from_cart": lambda kwargs: functions.remove_food_from_cart(CONFIG=CONFIG, **kwargs),
-            "open_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
-            "close_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
-            "place_order": lambda _: functions.dummy_function(), # dummy function - no need of information
-            "activate_handsfree": lambda _: functions.dummy_function(), # dummy function - no need of information
+            "get_products": lambda kwargs: functions.find_product(CONFIG=CONFIG, **kwargs),
+            # "get_restaurant_pages": lambda kwargs: functions.find_restaurant_pages(CONFIG=CONFIG, **kwargs),
+            # "open_restaurant_page": lambda kwargs: functions.open_restaurant_page(CONFIG=CONFIG, **kwargs),
+            # "close_restaurant_page": lambda _: functions.dummy_function(), # dummy function - no need of information
+            # "get_user_actions": lambda _: functions.dummy_function(), # dummy function - actions are stored in the frontend
+            # "get_menu_of_restaurant": lambda kwargs: functions.get_menu_of_restaurant(CONFIG=CONFIG, **kwargs),
+            # "add_food_to_cart": lambda kwargs: functions.add_food_to_cart(CONFIG=CONFIG, **kwargs),
+            # "remove_food_from_cart": lambda kwargs: functions.remove_food_from_cart(CONFIG=CONFIG, **kwargs),
+            # "open_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
+            # "close_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
+            # "place_order": lambda _: functions.dummy_function(), # dummy function - no need of information
+            # "activate_handsfree": lambda _: functions.dummy_function(), # dummy function - no need of information
         }
 
         # Calling the function selected
         function_response = await available_functions[function_name](function_arguments)
         
+        print("response", function_response)
         return {"response": function_response}
 
     @router.post("/chat/transcribe")
@@ -130,7 +133,7 @@ def create_router(handler: MainHandler, CONFIG):
 
     ## Retrieving from the database
     @router.get("/products/")
-    def get_products(db: Session = Depends(get_db)):
+    def get_restaurants(db: Session = Depends(get_db)):
         return db.query(Products).all()
     
 

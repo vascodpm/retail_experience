@@ -59,6 +59,7 @@ class PromptHandler():
     def prepare_response(self, response):
         """Formats the response from the system"""
         response = jsonable_encoder(response)
+        #print(response)
         return {
             "response": response["choices"][0]["message"]["content"],
             "function_call": response["choices"][0]["message"].get("function_call", None),

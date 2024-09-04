@@ -41,7 +41,7 @@ def process_products():
     products = get_products(db)
    
     # Convert the data to a pandas DataFrame
-    products_data = [{"id": r.id, "name": r.name, "brand": r.brand, "price":r.price,} for r in products]
+    products_data = [{"id": r.id, "name": r.name, "brand": r.brand, "price":r.price, "category":r.category,} for r in products]
     df = pd.DataFrame(products_data)
 
 
@@ -67,6 +67,7 @@ def process_products():
                 "product_name": df_row[1]["name"],
                 "product_brand": df_row[1]["brand"],
                 "product_price": df_row[1]["price"],
+                "product_category": df_row[1]["category"],
             }
         )
         for df_row in df.iterrows()
