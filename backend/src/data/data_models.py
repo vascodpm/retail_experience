@@ -13,4 +13,6 @@ class Products(Base):
     name = Column(String, index=True)
     price = Column(Integer, index=True)
     image = Column(String, index=True)
+    category = Column(String, index=True)
+
 
