@@ -2,10 +2,11 @@
   <div v-if="restaurant" class="restaurant-full-view">
     <div class="sticky-top">
       <button class="go-back-btn" @click="goBack">Return</button>
-      <h2>{{ restaurant.name }}</h2>
+      <h2>{{ restaurant.name}}</h2>
       <img  @error="onImageError" :src="!(restaurant.image==null)? restaurant.image : 'restaurant.png'" class="restaurant-card-img-fullview rounded" alt="Restaurant Image" />
       <div class="description-container">
-        <p>{{ restaurant.description }}</p>
+        <p>{{ restaurant.name}}</p>
+        <p>"write here"</p>
       </div>
     </div>
     
@@ -48,19 +49,19 @@ export default {
       this.$emit("register-action", msg)
     },
     getFoods(restaurant) {
-      axios.get(this.baseApiUrl + "/restaurants/" + `${restaurant.uuid}` + "/foods")
+      axios.get(this.baseApiUrl + "/products/" ) //+ `${restaurant.uuid}` + "/foods")
         .then(response => {
           this.foods = [];
           const data = response.data;
           for (let i = 0; i < data.length; i++) {
             this.foods.push({
               name: data[i].name,
-              description: data[i].description,
+              //description: data[i].description,
               price: data[i].price,
               quantity: 1,
-              restaurant: {
-                restaurant
-              },
+              // restaurant: {
+              //   restaurant
+              // },
               image: data[i].image,
               // image: null,
               uuid: data[i].id,

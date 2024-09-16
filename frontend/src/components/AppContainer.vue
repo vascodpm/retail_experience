@@ -281,6 +281,7 @@
                 // Then we need to call generateAnswer but with function call deactivated and a new parameter:
                 this.messages.push(
                   functionCallOutput
+
                 )
                 this.generateAnswer(
                   chatHistory=this.getChatHistory(),
@@ -320,36 +321,36 @@
             let functionCallResponseContent;
 
             switch (functionCallSignal.name) {
-              case "get_restaurant_pages":
+              case "get_products":
                 functionCallResponseContent = this.handleGetRestaurant(functionCallResponse);
                 break;
-              case "open_restaurant_page":
-                functionCallResponseContent = this.handleOpenRestaurant(functionCallResponse);
-                break;
-              case "close_restaurant_page":
-                functionCallResponseContent = this.handleCloseRestaurant(functionCallResponse);
-                break;
-              case "get_user_actions":
-                functionCallResponseContent = this.handleGetActions(functionCallResponse);
-                break;
-              case "get_menu_of_restaurant":
-                functionCallResponseContent = this.handleGetCurrentRestaurantMenu(functionCallResponse);
-                break;
-              case "open_shopping_cart": // to be implemented
-                functionCallResponseContent = this.handleOpenShoppingCart(functionCallResponse);
-                break;
-              case "close_shopping_cart": // to be implemented
-                functionCallResponseContent = this.handleCloseShoppingCart(functionCallResponse);
-                break;
+              // case "open_restaurant_page":
+              //   functionCallResponseContent = this.handleOpenRestaurant(functionCallResponse);
+              //   break;
+              // case "close_restaurant_page":
+              //   functionCallResponseContent = this.handleCloseRestaurant(functionCallResponse);
+              //   break;
+              // case "get_user_actions":
+              //   functionCallResponseContent = this.handleGetActions(functionCallResponse);
+              //   break;
+              // case "get_menu_of_restaurant":
+              //   functionCallResponseContent = this.handleGetCurrentRestaurantMenu(functionCallResponse);
+              //   break;
+              // case "open_shopping_cart": // to be implemented
+              //   functionCallResponseContent = this.handleOpenShoppingCart(functionCallResponse);
+              //   break;
+              // case "close_shopping_cart": // to be implemented
+              //   functionCallResponseContent = this.handleCloseShoppingCart(functionCallResponse);
+              //   break;
               case "add_food_to_cart":
                 functionCallResponseContent = this.handleAddFoodToCart(functionCallResponse);
                 break;
               case "remove_food_from_cart":
                 functionCallResponseContent = this.handleRemoveFoodFromCart(functionCallResponse);
                 break;
-              case "place_order":
-                functionCallResponseContent = this.handlePlaceOrder(functionCallResponse);
-                break;
+              // case "place_order":
+              //   functionCallResponseContent = this.handlePlaceOrder(functionCallResponse);
+              //   break;
               case "activate_handsfree":
                 functionCallResponseContent = this.handleActivateHandsFree(functionCallResponse);
                 break;
@@ -357,7 +358,7 @@
                 functionCallResponseContent = functionCallResponse.data.response.response;
                 console.log("Name of function not found - returning response raw");
             }
-
+            console.log("AQUIIIIIIIIIIIII");
             console.log(functionCallResponseContent);
 
             resolve({

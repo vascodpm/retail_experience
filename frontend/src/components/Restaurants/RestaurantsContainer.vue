@@ -71,16 +71,16 @@
       },
       async getRestaurants() {
         try {
-          this.products = [];
-          const response = await axios.get(this.baseApiUrl + "/products");
+          this.restaurants = [];
+          const response = await axios.get(this.baseApiUrl + "/products/");
           const data = response.data;
           for (let i = 0; i < data.length; i++) {
-            this.products.push({
+            this.restaurants.push({
               name: data[i].name,
-              //image: data[i].image,
+              image: data[i].image,
               // image: null,
               uuid: data[i].id,
-
+              //description: data[i].description,
             });
           }
         } catch (error) {
