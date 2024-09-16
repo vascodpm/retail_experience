@@ -17,12 +17,14 @@ def load_pinecone_index(index_name, CONFIG):
 
     return index
 
-def get_retriever(index_name: str, top_k:int,  CONFIG, **kwargs):
+def get_retriever(index_name: str, CONFIG, **kwargs):
+        #def get_retriever(index_name: str, top_k:int,  CONFIG, **kwargs):
         """Returns a retriever object from a pinecone index"""
 
         # Loads the index
         index = load_pinecone_index(index_name, CONFIG)
 
         # Returns the retriever
-        return index.as_retriever(similarity_top_k=top_k, **kwargs)
+        # return index.as_retriever(similarity_top_k=top_k, **kwargs)
+        return index.as_retriever(**kwargs)
     

@@ -1,4 +1,6 @@
 from src.utils import get_retriever
+import httpx 
+#from src.endpoints.routers import get_restaurants
 from llama_index.vector_stores.types import ExactMatchFilter
 from tenacity import retry, wait_random, stop_after_attempt
 
@@ -10,7 +12,7 @@ async def find_product(
         price = None,
         category = None,
         other_information = None,
-        quantity = 5,
+        # quantity = 1,
     ):
 
     query = get_query(
@@ -24,17 +26,38 @@ async def find_product(
     retriever = get_retriever(
         index_name="foodproject",
         CONFIG=CONFIG,
-        top_k=quantity,
+        # top_k=quantity,
         filter=[ExactMatchFilter(key="search_type", value="name")]
     )
 
     response = retriever.retrieve(query)
+
+    products_id_array = []
     
     # return dict(dict(response[0])["node"])["metadata"]
     for i in range(len(response)):
         response[i] = dict(dict(response[i])["node"])["metadata"]
-    return response
+        products_id_array.append(dict(response[i])["product_id"])
 
+    # Call the /products/ route with products_id_array
+    if products_id_array:
+        async with httpx.AsyncClient() as client:
+            # Build query parameters from products_id_array
+            params = [("restaurant_ids", product_id) for product_id in products_id_array]
+            print(params)
+            
+            # Make the GET request to the /products/ endpoint
+            backend_url = "http://localhost:8080/api/products/"  # Modify this URL if needed
+            api_response = await client.get(backend_url, params=params)
+
+            # # Handle the response
+            # if api_response.status_code == 200:
+            #     products_data = api_response.json()
+            #     return products_data
+            # else:
+            #     raise Exception(f"Failed to fetch products: {api_response.text}")
+
+    return response  # Return the original response if no products_id_array
 
 def get_query(
         name_of_product: str=None,

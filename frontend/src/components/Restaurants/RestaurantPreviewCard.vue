@@ -8,12 +8,12 @@
       <div class="restaurant-card-body">
         <h5 class="restaurant-card-title">{{ restaurant.name }}</h5>
         <p class="restaurant-card-text">
-          <span v-if="restaurant.description.length > 30">
-            {{ restaurant.description.substring(0, 30) }}... 
+          <span v-if="restaurant.name.length > 30">
+            {{ restaurant.name.substring(0, 30) }}... 
             <!-- <span class="show-more" @click.stop="showMore = true">Show more</span> -->
           </span>
-          <span v-else>{{ restaurant.description }}</span>
-          <span v-if="showMore">{{ restaurant.description.substring(100) }}</span>
+          <span v-else>{{ restaurant.name }}</span>
+          <!-- <span v-if="showMore">{{ restaurant.name.substring(100) }}</span> -->
         </p>
       </div>
     </div>

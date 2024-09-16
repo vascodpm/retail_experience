@@ -1,6 +1,7 @@
 """File containing root routes"""
+from typing import List, Optional
 from fastapi.routing import APIRouter
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Query
 from fastapi import File, UploadFile
 from fastapi.encoders import jsonable_encoder
 import base64
@@ -90,12 +91,12 @@ def create_router(handler: MainHandler, CONFIG):
             # "close_restaurant_page": lambda _: functions.dummy_function(), # dummy function - no need of information
             # "get_user_actions": lambda _: functions.dummy_function(), # dummy function - actions are stored in the frontend
             # "get_menu_of_restaurant": lambda kwargs: functions.get_menu_of_restaurant(CONFIG=CONFIG, **kwargs),
-            # "add_food_to_cart": lambda kwargs: functions.add_food_to_cart(CONFIG=CONFIG, **kwargs),
-            # "remove_food_from_cart": lambda kwargs: functions.remove_food_from_cart(CONFIG=CONFIG, **kwargs),
+            "add_food_to_cart": lambda kwargs: functions.add_food_to_cart(CONFIG=CONFIG, **kwargs),
+            "remove_food_from_cart": lambda kwargs: functions.remove_food_from_cart(CONFIG=CONFIG, **kwargs),
             # "open_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
             # "close_shopping_cart": lambda _: functions.dummy_function(), # dummy function - no need of information
             # "place_order": lambda _: functions.dummy_function(), # dummy function - no need of information
-            # "activate_handsfree": lambda _: functions.dummy_function(), # dummy function - no need of information
+            "activate_handsfree": lambda _: functions.dummy_function(), # dummy function - no need of information
         }
 
         # Calling the function selected
@@ -133,9 +134,17 @@ def create_router(handler: MainHandler, CONFIG):
 
     ## Retrieving from the database
     @router.get("/products/")
-    def get_restaurants(db: Session = Depends(get_db)):
-        return db.query(Products).all()
-    
+    def get_restaurants(
+        restaurant_ids: Optional[List[int]] = Query(default=None),   # Use Query explicitly
+        db: Session = Depends(get_db)):
+        if restaurant_ids:
+            # If restaurant_ids are provided, filter by them
+            restaurants = db.query(Products).filter(Products.id.in_(restaurant_ids)).all()
+        else:
+            # If no restaurant_ids are provided, return all products
+            restaurants = db.query(Products).all()
+        return restaurants
+        
 
     return router
     
