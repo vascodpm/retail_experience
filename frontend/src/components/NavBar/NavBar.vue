@@ -4,7 +4,7 @@
             <div class="navbar-brand shadow-none d-flex align-items-center">
                 <img class="navbar-logo" src="@/assets/favicon.png" />
                 <h2 class="navbar-title mb-0">
-                  Discover restaurants and order food online using a virtual assistant 
+                  New retailer experience
                 </h2>
             </div>
         </div>

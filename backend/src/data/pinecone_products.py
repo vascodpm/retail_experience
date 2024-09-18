@@ -45,18 +45,6 @@ def process_products():
     df = pd.DataFrame(products_data)
 
 
-
-    # # Merging
-    # df = pd.merge(products_df, on="id")
-
-    # # Groupby restaurant and creating text for embedding
-    # df["food_text"] = "\n-"+df["food_name"] + "\n" + df["food_description"]
-
-    # df = df.groupby("id").agg({"name": "first", "description": "first", "food_text": "sum"}).reset_index()
-    
-    # # Creating text for embedding
-    # df["text"] = "```" + df["name"] + "\nRestaurant description: " + df["description"] + "\nFood available:" + df["food_text"] + "\n```"
-
     # Llamaindex
     documents = [
         Document(
@@ -90,17 +78,12 @@ def process_products():
 
     storage_context.docstore.add_documents(nodes)
 
-    print("123")
-
     index = VectorStoreIndex.from_documents(
         documents=documents,
         #vector_store=vector_store,
         storage_context=storage_context,
         service_context=service_context,
     )
-
-
-    print("456")
 
     return  index,nodes
 
@@ -111,12 +94,9 @@ def load_index():
         environment=ENVIRONMENT,
         # add_sparse_vector=True,
     )
-    #print(vector_store)
 
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    #print(storage_context)
     
-    #loaded_index = VectorStoreIndex.from_vector_store(vector_store)
     index = VectorStoreIndex([], storage_context=storage_context,)
 
     return index

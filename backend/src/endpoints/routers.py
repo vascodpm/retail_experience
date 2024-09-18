@@ -32,6 +32,8 @@ from src.services import openai_service, functions
 from sqlalchemy.orm import Session
 from src.data.data_utils import get_db
 
+filtered_product_ids = None
+
 def create_router(handler: MainHandler, CONFIG):
     router = APIRouter()
     client = handler.openai_client
@@ -46,7 +48,6 @@ def create_router(handler: MainHandler, CONFIG):
         
         # Collects the messages in a list of dicts
         messages = prompt_handler.get_messages(prompt_request)
-        print(prompt_request)
         
         # For function calling functionality
         functions = []
@@ -65,7 +66,7 @@ def create_router(handler: MainHandler, CONFIG):
             
             # Formats and returns
             response = prompt_handler.prepare_response(prompt_response)
-            print(response)
+            print("response",response)
 
         except Exception as e:
             print(e)
@@ -77,7 +78,10 @@ def create_router(handler: MainHandler, CONFIG):
     async def function_call(function_call: FunctionCall):
         """Receives the function call from the frontend and executes it"""
         print("entrei")
-        # Preparing functions
+
+        global filtered_product_ids
+
+        # Preparing functions        
         function_call_properties = jsonable_encoder(function_call)
         function_name = function_call_properties["name"]
         function_arguments = json.loads(function_call_properties["arguments"])
@@ -101,22 +105,29 @@ def create_router(handler: MainHandler, CONFIG):
 
         # Calling the function selected
         function_response = await available_functions[function_name](function_arguments)
+
+        print("function_response",function_response)
         
-        print("response", function_response)
+        if function_name == "get_products":
+            # Store the filtered product IDs globally
+            filtered_product_ids = [product['product_id'] for product in function_response]
+
         return {"response": function_response}
 
     @router.post("/chat/transcribe")
     async def generate_transcription(audio_req: AudioTranscriptRequest):
         """Receives the audio file from the frontend and transcribes it"""
-
+        
         # Initializes the handler
         audio_handler = handler.audio_handler
         
         # Extracts the audio segment of the file
         audio_segment, _ = audio_handler.extract_audio_segment(audio_req.audio)
+        print("entrei123")
 
         # Send it as a tempfile path to openai - because that's the acceptable way to do it
-        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=True) as tmp_file:
+        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_file:
+            print(f"Exporting audio to {tmp_file.name}")
             audio_segment.export(tmp_file.name, format="mp3")
             speech_filepath = Path(tmp_file.name)
             transcripted_response = await openai_service.whisper(audio_file=open(speech_filepath, "rb"), CONFIG=CONFIG, client=client)
@@ -137,9 +148,14 @@ def create_router(handler: MainHandler, CONFIG):
     def get_restaurants(
         restaurant_ids: Optional[List[int]] = Query(default=None),   # Use Query explicitly
         db: Session = Depends(get_db)):
-        if restaurant_ids:
-            # If restaurant_ids are provided, filter by them
-            restaurants = db.query(Products).filter(Products.id.in_(restaurant_ids)).all()
+
+        global filtered_product_ids 
+
+        print("filtered_product_ids",filtered_product_ids)
+
+        if filtered_product_ids:
+            restaurants = db.query(Products).filter(Products.id.in_(filtered_product_ids)).all()
+            filtered_product_ids = None # temporary
         else:
             # If no restaurant_ids are provided, return all products
             restaurants = db.query(Products).all()

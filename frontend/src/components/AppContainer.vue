@@ -374,8 +374,18 @@
       },
       handleGetRestaurant: function(functionCallResponse){
         this.botTypingMsg = "Searching for restaurants..."
-        let msg = "@agent-action: You found the restaurant page(s) for " + JSON.stringify(functionCallResponse.data.response) + "!";
-        return msg
+        try {
+          // Now, call getRestaurants to refresh the restaurant list
+          this.$refs.restaurantsContainer.getRestaurants();
+
+          let msg = "@agent-action: You found the restaurant page(s) for " + JSON.stringify(functionCallResponse.data.response) + "!";
+          return msg;
+        } catch (error) {
+          console.log("Error fetching products or updating restaurants:", error);
+          return "@agent-action: Error occurred while fetching restaurants.";
+        }
+        // let msg = "@agent-action: You found the restaurant page(s) for " + JSON.stringify(functionCallResponse.data.response) + "!";
+        // return msg
         
       },
       handleOpenRestaurant: function(functionCallResponse){

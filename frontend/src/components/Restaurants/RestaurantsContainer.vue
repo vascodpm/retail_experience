@@ -1,7 +1,7 @@
 <template>
   <div class="restaurants-container">
     <div v-if="!selectedRestaurant" class="row">
-      <b class="sticky-top" style="background:white;">Restaurants nearby your address</b>
+      <b class="sticky-top" style="background:white;">Products available</b>
       <restaurant-preview-card
         v-for="(restaurant, index) in restaurants"
         :key="restaurant.uuid"

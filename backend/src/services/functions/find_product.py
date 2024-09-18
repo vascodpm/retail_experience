@@ -4,6 +4,8 @@ import httpx
 from llama_index.vector_stores.types import ExactMatchFilter
 from tenacity import retry, wait_random, stop_after_attempt
 
+
+
 @retry(wait=wait_random(min=1, max=5), stop=stop_after_attempt(5))
 async def find_product(
         CONFIG,
@@ -32,30 +34,30 @@ async def find_product(
 
     response = retriever.retrieve(query)
 
-    products_id_array = []
+    # products_id_array = []
     
     # return dict(dict(response[0])["node"])["metadata"]
     for i in range(len(response)):
         response[i] = dict(dict(response[i])["node"])["metadata"]
-        products_id_array.append(dict(response[i])["product_id"])
+        # products_id_array.append(dict(response[i])["product_id"])
 
-    # Call the /products/ route with products_id_array
-    if products_id_array:
-        async with httpx.AsyncClient() as client:
-            # Build query parameters from products_id_array
-            params = [("restaurant_ids", product_id) for product_id in products_id_array]
-            print(params)
+    # # Call the /products/ route with products_id_array
+    # if products_id_array:
+    #     async with httpx.AsyncClient() as client:
+    #         # Build query parameters from products_id_array
+    #         params = [("restaurant_ids", product_id) for product_id in products_id_array]
+    #         print(params)
             
-            # Make the GET request to the /products/ endpoint
-            backend_url = "http://localhost:8080/api/products/"  # Modify this URL if needed
-            api_response = await client.get(backend_url, params=params)
+    #         # Make the GET request to the /products/ endpoint
+    #         backend_url = "http://localhost:8080/api/products/"  
+    #         api_response = await client.get(backend_url, params=params)
 
-            # # Handle the response
-            # if api_response.status_code == 200:
-            #     products_data = api_response.json()
-            #     return products_data
-            # else:
-            #     raise Exception(f"Failed to fetch products: {api_response.text}")
+    #         # # Handle the response
+    #         # if api_response.status_code == 200:
+    #         #     products_data = api_response.json()
+    #         #     return products_data
+    #         # else:
+    #         #     raise Exception(f"Failed to fetch products: {api_response.text}")
 
     return response  # Return the original response if no products_id_array
 
