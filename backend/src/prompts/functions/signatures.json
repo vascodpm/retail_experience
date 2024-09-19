@@ -9,6 +9,10 @@
                     "type": "string",
                     "description": "Not mandatory. The name of the product. In case the user didn't specify it in the request, it should be set to null."
                 },
+                "quantity_of_product": {
+                    "type": "string",
+                    "description": "Not mandatory. Quantity of the product. In case the user didn't specify it in the request, it should be set to null."
+                },
                 "brand_of_product": {
                     "type": "string",
                     "description": "Not mandatory. Brand of the product. In case the user didn't specify it in the request, it should be set to null."
@@ -17,7 +21,7 @@
                     "type": "array",
                     "description": "Not mandatory. Maximum or minimum price limit. In case the user didn't specify it in the request, it should be set to null.",
                     "items": {
-                        "type": "string"
+                        "type": "integer"
                     }
                 },
                 "category": {
@@ -35,9 +39,18 @@
         },
         "required": [
             "name_of_product",
+            "quantity_of_product",
             "brand_of_product",
             "price",
             "other_information"
         ]
+    },
+    {
+        "name": "activate_handsfree",
+        "description": "This function activates a handsfree chat experience where you are always answering by voice to the user interface",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
     }
 ]

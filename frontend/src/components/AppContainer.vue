@@ -373,7 +373,7 @@
         });
       },
       handleGetRestaurant: function(functionCallResponse){
-        this.botTypingMsg = "Searching for restaurants..."
+        this.botTypingMsg = "Searching for products..."
         try {
           // Now, call getRestaurants to refresh the restaurant list
           this.$refs.restaurantsContainer.getRestaurants();

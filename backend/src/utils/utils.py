@@ -14,7 +14,7 @@ def load_pinecone_index(index_name, CONFIG):
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
     
     index = VectorStoreIndex([], storage_context=storage_context,)
-
+    
     return index
 
 def get_retriever(index_name: str, CONFIG, **kwargs):
@@ -23,8 +23,8 @@ def get_retriever(index_name: str, CONFIG, **kwargs):
 
         # Loads the index
         index = load_pinecone_index(index_name, CONFIG)
+        
+        retriever = index.as_retriever(**kwargs)
 
-        # Returns the retriever
-        # return index.as_retriever(similarity_top_k=top_k, **kwargs)
-        return index.as_retriever(**kwargs)
-    
+        return retriever
+        
