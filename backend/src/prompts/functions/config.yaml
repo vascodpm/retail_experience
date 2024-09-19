@@ -7,6 +7,9 @@ functions:
         name_of_product:
           type: string
           description: Not mandatory. The name of the product. In case the user didn't specify it in the request, it should be set to null.
+        quantity_of_product:
+          type: string
+          description: Not mandatory. Quantity of the product. In case the user didn't specify it in the request, it should be set to null.
         brand_of_product:
           type: string
           description: Not mandatory. Brand of the product. In case the user didn't specify it in the request, it should be set to null.
@@ -14,7 +17,7 @@ functions:
           type: array
           description: Not mandatory. Maximum or minimum price limit. In case the user didn't specify it in the request, it should be set to null.
           items:
-            type: string
+            type: integer
         category:
           type: string
           description: Not mandatory. Category of the products. In case the user didn't specify it in the request, it should be set to null.
@@ -23,7 +26,7 @@ functions:
         other_information:
           type: string
           description: All other information that the user provided that could potentially help finding the best match.
-    required: [name_of_product, brand_of_product, price, other_information]
+    required: [name_of_product, quantity_of_product, brand_of_product, price, other_information]
     allow: true
   # - name: get_restaurant_pages
   #   description: This function finds a restaurant that has similar food or name to what the user is asking for. Not all the restaurants found are necessarily the best option for the user, use the description of the restaurant as a proxy to suggest it to them.
@@ -138,9 +141,9 @@ functions:
   #     properties: {}
   #   allow: true
   
-  # - name: activate_handsfree
-  #   description: This function activates a handsfree chat experience where you are always answering by voice to the user interface
-  #   parameters:
-  #     type: object
-  #     properties: {}
-  #   allow: true
+  - name: activate_handsfree
+    description: This function activates a handsfree chat experience where you are always answering by voice to the user interface
+    parameters:
+      type: object
+      properties: {}
+    allow: true

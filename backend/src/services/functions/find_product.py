@@ -1,96 +1,66 @@
 from src.utils import get_retriever
-import httpx 
-#from src.endpoints.routers import get_restaurants
-from llama_index.vector_stores.types import ExactMatchFilter
+import httpx
+from llama_index.vector_stores.types import ExactMatchFilter, MetadataFilters, MetadataFilter, FilterOperator
 from tenacity import retry, wait_random, stop_after_attempt
-
-
 
 @retry(wait=wait_random(min=1, max=5), stop=stop_after_attempt(5))
 async def find_product(
         CONFIG,
-        name_of_product = None,
-        brand_of_product = None,
-        price = None,
-        category = None,
-        other_information = None,
-        # quantity = 1,
-    ):
+        name_of_product=None,
+        quantity_of_product=None,
+        brand_of_product=None,
+        price=None,
+        category=None,
+        other_information=None,
 
+):
     query = get_query(
-        name_of_product = name_of_product,
-        brand_of_product = brand_of_product,
-        price = price,
-        category = category,
-        other_information = other_information,
+        name_of_product=name_of_product,
+        quantity_of_product=quantity_of_product,
+        brand_of_product=brand_of_product,
+        price=price,
+        category=category,
+        other_information=other_information,
     )
+    print("Generated Query:", query)
 
     retriever = get_retriever(
         index_name="foodproject",
         CONFIG=CONFIG,
-        # top_k=quantity,
-        filter=[ExactMatchFilter(key="search_type", value="name")]
+        similarity_top_k=10,
+        # Uncomment and adjust if needed
+        # filters=filters
     )
 
     response = retriever.retrieve(query)
 
-    # products_id_array = []
-    
-    # return dict(dict(response[0])["node"])["metadata"]
-    for i in range(len(response)):
-        response[i] = dict(dict(response[i])["node"])["metadata"]
-        # products_id_array.append(dict(response[i])["product_id"])
+    processed_response = []
+    for item in response:
+        metadata = dict(dict(item)["node"])["metadata"]
+        processed_response.append(metadata)
 
-    # # Call the /products/ route with products_id_array
-    # if products_id_array:
-    #     async with httpx.AsyncClient() as client:
-    #         # Build query parameters from products_id_array
-    #         params = [("restaurant_ids", product_id) for product_id in products_id_array]
-    #         print(params)
-            
-    #         # Make the GET request to the /products/ endpoint
-    #         backend_url = "http://localhost:8080/api/products/"  
-    #         api_response = await client.get(backend_url, params=params)
-
-    #         # # Handle the response
-    #         # if api_response.status_code == 200:
-    #         #     products_data = api_response.json()
-    #         #     return products_data
-    #         # else:
-    #         #     raise Exception(f"Failed to fetch products: {api_response.text}")
-
-    return response  # Return the original response if no products_id_array
+    print("Processed Response:", processed_response)
+    return processed_response
 
 def get_query(
-        name_of_product: str=None,
-        brand_of_product: str="",
-        price: list=[],
-        category: str="",
-        other_information:str ="",
-    ):
-    """Returns the query for the find products"""
-    name_of_product_query = f"""
-    Name: {name_of_product}
-    """ if name_of_product else ""
-
-    brand_query = f"""
-    Brand: {brand_of_product}
-    """ if brand_of_product else ""
-
-    price_query = f"""
-    Price: {price}
-    """ if price else ""
-
-    category_query = f"""
-    Category: {category}
-    """ if category else ""   
-
-    other_information_query = f"""
-    Other information: {other_information}
-    """ if other_information else ""
+        name_of_product: str = None,
+        quantity_of_product: str = None,
+        brand_of_product: str = None,
+        price: list = None,
+        category: str = None,
+        other_information: str = None,
+):
+    """Helper function to build a query string based on product attributes."""
+    name_of_product_query = f"Name: {name_of_product}" if name_of_product else ""
+    quantity_query = f"Quantity: {quantity_of_product}" if quantity_of_product else ""
+    brand_query = f"Brand: {brand_of_product}" if brand_of_product else ""
+    price_query = f"Price: {price}" if price else ""
+    category_query = f"Category: {category}" if category else ""
+    other_information_query = f"Other information: {other_information}" if other_information else ""
 
     return f"""
     {name_of_product_query}
+    {quantity_query}
     {brand_query}
     {price_query}
     {category_query}

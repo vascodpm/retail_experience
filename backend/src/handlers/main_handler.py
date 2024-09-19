@@ -1,7 +1,7 @@
 # Handlers 
 from .prompt_handler import PromptHandler
 from .audio_handler import AudioHandler
-from .vectordb_handler import VectorDBHandler
+# from .vectordb_handler import VectorDBHandler
 
 # Abstract class creation
 from abc import ABC, abstractmethod
@@ -21,4 +21,4 @@ class MainHandler(ABC):
         self.openai_client = openai.OpenAI(api_key=CONFIG["openai"]["api_key"])
         self.prompt_handler = PromptHandler()
         self.audio_handler = AudioHandler()
-        self.vectordb_handler = VectorDBHandler()
+        # self.vectordb_handler = VectorDBHandler()

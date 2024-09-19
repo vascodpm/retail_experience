@@ -47,13 +47,15 @@ def create_router(handler: MainHandler, CONFIG):
         prompt_handler = handler.prompt_handler
         
         # Collects the messages in a list of dicts
+        print(prompt_request)
         messages = prompt_handler.get_messages(prompt_request)
-        
+        #print("messages",messages)
         # For function calling functionality
         functions = []
         
         if prompt_request.function_call:
             functions = prompt_handler.get_functions()
+            #print("functions",functions)
         
         try:
             # Calls the main chat completion function
@@ -77,7 +79,6 @@ def create_router(handler: MainHandler, CONFIG):
     @router.post("/chat/function_call")
     async def function_call(function_call: FunctionCall):
         """Receives the function call from the frontend and executes it"""
-        print("entrei")
 
         global filtered_product_ids
 
@@ -105,7 +106,6 @@ def create_router(handler: MainHandler, CONFIG):
 
         # Calling the function selected
         function_response = await available_functions[function_name](function_arguments)
-
         print("function_response",function_response)
         
         if function_name == "get_products":
@@ -123,11 +123,9 @@ def create_router(handler: MainHandler, CONFIG):
         
         # Extracts the audio segment of the file
         audio_segment, _ = audio_handler.extract_audio_segment(audio_req.audio)
-        print("entrei123")
 
         # Send it as a tempfile path to openai - because that's the acceptable way to do it
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_file:
-            print(f"Exporting audio to {tmp_file.name}")
             audio_segment.export(tmp_file.name, format="mp3")
             speech_filepath = Path(tmp_file.name)
             transcripted_response = await openai_service.whisper(audio_file=open(speech_filepath, "rb"), CONFIG=CONFIG, client=client)
@@ -154,12 +152,12 @@ def create_router(handler: MainHandler, CONFIG):
         print("filtered_product_ids",filtered_product_ids)
 
         if filtered_product_ids:
-            restaurants = db.query(Products).filter(Products.id.in_(filtered_product_ids)).all()
+            products = db.query(Products).filter(Products.id.in_(filtered_product_ids)).all()
             filtered_product_ids = None # temporary
         else:
             # If no restaurant_ids are provided, return all products
-            restaurants = db.query(Products).all()
-        return restaurants
+            products = db.query(Products).all()
+        return products
         
 
     return router
