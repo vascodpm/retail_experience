@@ -43,19 +43,19 @@ def create_router(handler: MainHandler, CONFIG):
     async def send_message(prompt_request: ChatRequest):
         """Receives the chatlog from the user and answers"""
 
+        global filtered_product_ids
+
         # Initializes the handler
         prompt_handler = handler.prompt_handler
         
         # Collects the messages in a list of dicts
-        print(prompt_request)
         messages = prompt_handler.get_messages(prompt_request)
-        #print("messages",messages)
+
         # For function calling functionality
         functions = []
         
         if prompt_request.function_call:
             functions = prompt_handler.get_functions()
-            #print("functions",functions)
         
         try:
             # Calls the main chat completion function
@@ -65,10 +65,20 @@ def create_router(handler: MainHandler, CONFIG):
                 functions=functions,
                 client=client
             )
-            
+            print("messages: ", messages)
+
+            print("prompt_response: ", prompt_response)
             # Formats and returns
             response = prompt_handler.prepare_response(prompt_response)
             print("response",response)
+
+            try:
+                # Store the filtered product IDs globally
+                print("response[product_ids]", response["product_ids"])
+                filtered_product_ids = response["product_ids"]
+            except:
+                print("jump")
+
 
         except Exception as e:
             print(e)
@@ -79,8 +89,6 @@ def create_router(handler: MainHandler, CONFIG):
     @router.post("/chat/function_call")
     async def function_call(function_call: FunctionCall):
         """Receives the function call from the frontend and executes it"""
-
-        global filtered_product_ids
 
         # Preparing functions        
         function_call_properties = jsonable_encoder(function_call)
@@ -106,12 +114,8 @@ def create_router(handler: MainHandler, CONFIG):
 
         # Calling the function selected
         function_response = await available_functions[function_name](function_arguments)
-        print("function_response",function_response)
-        
-        if function_name == "get_products":
-            # Store the filtered product IDs globally
-            filtered_product_ids = [product['product_id'] for product in function_response]
-
+        #print("function_response", function_response)
+     
         return {"response": function_response}
 
     @router.post("/chat/transcribe")

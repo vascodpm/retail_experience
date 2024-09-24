@@ -278,6 +278,11 @@
           else {
             this.handleFunctionCall(functionCallSignal)
               .then((functionCallOutput) => {
+
+                if (functionCallSignal.name === "get_products") {
+                  // Now, call getRestaurants to refresh the restaurant list
+                  this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
+                }
                 // Then we need to call generateAnswer but with function call deactivated and a new parameter:
                 this.messages.push(
                   functionCallOutput
@@ -376,7 +381,7 @@
         this.botTypingMsg = "Searching for products..."
         try {
           // Now, call getRestaurants to refresh the restaurant list
-          this.$refs.restaurantsContainer.getRestaurants();
+          // this.$refs.restaurantsContainer.getRestaurants();
 
           let msg = "@agent-action: You found the restaurant page(s) for " + JSON.stringify(functionCallResponse.data.response) + "!";
           return msg;

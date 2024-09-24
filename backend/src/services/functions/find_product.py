@@ -22,7 +22,7 @@ async def find_product(
         category=category,
         other_information=other_information,
     )
-    print("Generated Query:", query)
+    #print("Generated Query:", query)
 
     retriever = get_retriever(
         index_name="foodproject",

@@ -59,12 +59,35 @@ class PromptHandler():
     def prepare_response(self, response):
         """Formats the response from the system"""
         response = jsonable_encoder(response)
-        #print(response)
-        return {
-            "response": response["choices"][0]["message"]["content"],
-            "function_call": response["choices"][0]["message"].get("function_call", None),
-        }
 
+        # Get the content from the response
+        content = response["choices"][0]["message"].get("content")
+
+        # Check if content is None
+        if content is None:
+            return {
+                "response": response["choices"][0]["message"],
+                "function_call": response["choices"][0]["message"].get("function_call", None),
+            }
+
+        # Attempt to parse the content as JSON
+        try:
+            # Convert the string inside the content field to a JSON object
+            content_json = json.loads(content)
+
+            # Return the formatted response with HTML content
+            return {
+                "response": content_json.get("message", ""),  # Extract HTML message
+                "product_ids": content_json.get("product_ids", []),  # Extract product IDs
+                "function_call": response["choices"][0]["message"].get("function_call", None),
+            }
+
+        except json.JSONDecodeError:
+            # Handle the case where content is not a valid JSON string
+            return {
+                "response": "Invalid JSON format in response content",
+                "function_call": response["choices"][0]["message"].get("function_call", None),
+            }
     
     def get_functions(self,):
         """Returns the functions signatures"""
