@@ -22,7 +22,7 @@ async def find_product(
         category=category,
         other_information=other_information,
     )
-    print("Generated Query:", query)
+    #print("Generated Query:", query)
 
     retriever = get_retriever(
         index_name="foodproject",
@@ -39,7 +39,6 @@ async def find_product(
         metadata = dict(dict(item)["node"])["metadata"]
         processed_response.append(metadata)
 
-    print("Processed Response:", processed_response)
     return processed_response
 
 def get_query(
