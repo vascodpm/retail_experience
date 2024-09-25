@@ -36,21 +36,28 @@ class PromptHandler():
         # Gets the system prompt and injects context
         system_prompt = Path(CFG_CHAT["filepath"]).read_text()
 
+        chatlog = []
+
         # Retrieves the chat log
         chatlog = jsonable_encoder(prompt_request.query.history)
-
-        # Formatting - removes "name" parameter from non-functional inputs
+        
         chatlog = [
-            {"role": message["role"], "content": message["content"]}
-            if message["role"] != "function"
-            else {
-                "role": message["role"],
-                "content": message["content"],
-                "name": message["name"],
+            {
+                "role": message["role"],            # Keep the role
+                "content": message["content"]       # Keep the content
             }
-            for message in chatlog
+            if message["role"] != "function"        # If the role is not "function"
+            else {
+                "role": message["role"],            # Keep the role
+                "content": message["content"],      # Keep the content
+                "name": message["name"]             # Include the name if the role is "function"
+            }
+            for message in chatlog                  # Loop over each message in chatlog
+            if message["role"] != "assistant"       # Exclude messages with role "assistant"
         ]
 
+
+        print("chatlog", chatlog)
         # Merges all together
         messages = [{"role": "system", "content": system_prompt}] + chatlog
 

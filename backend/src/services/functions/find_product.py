@@ -39,7 +39,6 @@ async def find_product(
         metadata = dict(dict(item)["node"])["metadata"]
         processed_response.append(metadata)
 
-    print("Processed Response:", processed_response)
     return processed_response
 
 def get_query(

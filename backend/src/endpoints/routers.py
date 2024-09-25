@@ -50,7 +50,7 @@ def create_router(handler: MainHandler, CONFIG):
         
         # Collects the messages in a list of dicts
         messages = prompt_handler.get_messages(prompt_request)
-
+        
         # For function calling functionality
         functions = []
         
