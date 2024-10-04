@@ -259,6 +259,8 @@
           let answer = responseObject.response
           let functionCallSignal = responseObject.function_call
 
+          this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
+
           // If we don't have to function call it will return the answer
           if (functionCallSignal == false || functionCallSignal == null) {
             this.botTypingMsg = null
@@ -278,10 +280,9 @@
           else {
             this.handleFunctionCall(functionCallSignal)
               .then((functionCallOutput) => {
-
                 if (functionCallSignal.name === "get_products") {
                   // Now, call getRestaurants to refresh the restaurant list
-                  this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
+                  // this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
                 }
                 // Then we need to call generateAnswer but with function call deactivated and a new parameter:
                 this.messages.push(
