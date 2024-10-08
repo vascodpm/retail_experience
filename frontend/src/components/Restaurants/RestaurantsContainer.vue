@@ -49,21 +49,21 @@
       },
       selectRestaurant(uuid) {
         let flag_register_new_action = true;
-        if (this.selectedRestaurant) {
-          if (this.selectedRestaurant.uuid === uuid) {
-            flag_register_new_action = false;
-          }
-        }
+        // if (this.selectedRestaurant) {
+        //   if (this.selectedRestaurant.uuid === uuid) {
+        //     flag_register_new_action = false;
+        //   }
+        // }
 
-        this.selectedRestaurant = this.restaurants.find(
-          (restaurant) => restaurant.uuid === uuid
-        );
-        if (this.$refs.restaurantFullView) {
-          this.$refs.restaurantFullView.getFoods(this.selectedRestaurant);
-        }
-        if (flag_register_new_action){
-          this.registerAction("opened the restaurant page " + this.selectedRestaurant.name + " with restaurant_uuid=" + this.selectedRestaurant.uuid)
-        }
+        // this.selectedRestaurant = this.restaurants.find(
+        //   (restaurant) => restaurant.uuid === uuid
+        // );
+        // if (this.$refs.restaurantFullView) {
+        //   this.$refs.restaurantFullView.getFoods(this.selectedRestaurant);
+        // }
+        // if (flag_register_new_action){
+        //   this.registerAction("opened the restaurant page " + this.selectedRestaurant.name + " with restaurant_uuid=" + this.selectedRestaurant.uuid)
+        // }
       },
       deselectRestaurant() {
         this.registerAction("closed the restaurant page " + this.selectedRestaurant.name)

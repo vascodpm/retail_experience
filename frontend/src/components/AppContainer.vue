@@ -139,7 +139,7 @@
       addToCart(foodItem){
         // Should check if the foodItem name is already in the cart
         // If so, increment the quantity
-
+        console.log("foodItem  ", foodItem)
         if (this.shoppingCart.length === 0){
           this.shoppingCart.push(foodItem)
           // registering action
@@ -233,14 +233,19 @@
         // Scrolling down
         this.scrollDown()
 
-        // Parallelizing calls to backend
-        Promise.all(
-          this.generateAnswer(chatHistory),
-        ).then(() => {
-          console.log("Successfully sent message")
+        // // Parallelizing calls to backend
+        //Promise.all(
+        //  this.generateAnswer(chatHistory),
+        //).then(() => {
+        //  console.log("Successfully sent message")
+        //}).catch(error => {
+        //  console.log(error)
+        //})
+        this.generateAnswer(chatHistory).then(() => {
+          console.log("Successfully sent message");
         }).catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       },
       generateAnswer: async function(chatHistory, function_call = true, ){
         // Message backend interaction
@@ -258,6 +263,8 @@
           let responseObject = response.data
           let answer = responseObject.response
           let functionCallSignal = responseObject.function_call
+
+          this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
 
           // If we don't have to function call it will return the answer
           if (functionCallSignal == false || functionCallSignal == null) {
@@ -278,10 +285,9 @@
           else {
             this.handleFunctionCall(functionCallSignal)
               .then((functionCallOutput) => {
-
                 if (functionCallSignal.name === "get_products") {
                   // Now, call getRestaurants to refresh the restaurant list
-                  this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
+                  // this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
                 }
                 // Then we need to call generateAnswer but with function call deactivated and a new parameter:
                 this.messages.push(
@@ -396,7 +402,7 @@
       handleOpenRestaurant: function(functionCallResponse){
         this.botTypingMsg = "Opening restaurant page..."
         // restaurantId in string format to int
-        let restaurantId = parseInt(functionCallResponse.data.response.response.restaurant_uuid)
+        let restaurantId = parseInt(functionCallResponse.data.response.response.product_id)
         this.$refs.restaurantsContainer.selectRestaurant(parseInt(restaurantId))
         let msg = "@agent-action: You opened the restaurant page for " + restaurantId + "!";
         console.log(msg)
@@ -412,8 +418,8 @@
       handleAddFoodToCart: function(functionCallResponse){
         this.botTypingMsg = "Adding food to cart..."
         // Parsing ids
-        let restaurantId = parseInt(functionCallResponse.data.response.response.restaurant_uuid)
-        let foodId = parseInt(functionCallResponse.data.response.response.food_id)
+        let restaurantId = parseInt(functionCallResponse.data.response.response.product_id)
+        let foodId = parseInt(functionCallResponse.data.response.response.product_id)
         
         // Making sure the selected restaurant is the one we want
         let restaurantContainer = this.$refs.restaurantsContainer
@@ -424,7 +430,8 @@
         let restaurantPage = restaurantContainer.$refs.restaurantFullView
         let foods = restaurantPage.foods
         let food = foods.find(food => food.uuid === foodId)
-        food.quantity = functionCallResponse.data.response.response.quantity
+        console.log(functionCallResponse.data.response)
+        //food.quantity = functionCallResponse.data.response.response.product_quantity
         
         // Adding it to the shopping cart
         restaurantPage.addToCart(food)
@@ -432,14 +439,14 @@
         // Opening the shopping cart
         this.openCart()
 
-        return "@agent-action: You added "+ food.quantity + " of "+ food.name + " to the shopping cart!"
+        return "@agent-action: You added "+ " of "+ food.name + " to the shopping cart!"
       },
 
       handleRemoveFoodFromCart: function(functionCallResponse){
         this.botTypingMsg = "Removing food from cart..."
         // Parsing ids
         let restaurantId = parseInt(functionCallResponse.data.response.response.restaurant_uuid)
-        let foodId = parseInt(functionCallResponse.data.response.response.food_id)
+        let foodId = parseInt(functionCallResponse.data.response.response.product_id)
 
         // selecting shopping cart
         let shoppingCartContainer = this.$refs.shoppingCart

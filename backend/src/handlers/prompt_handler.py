@@ -40,6 +40,7 @@ class PromptHandler():
 
         # Retrieves the chat log
         chatlog = jsonable_encoder(prompt_request.query.history)
+        print("chatlog 2 ",chatlog)
         
         chatlog = [
             {
@@ -57,7 +58,8 @@ class PromptHandler():
         ]
 
 
-        print("chatlog", chatlog)
+        print("chatlog 3", chatlog)
+        
         # Merges all together
         messages = [{"role": "system", "content": system_prompt}] + chatlog
 
