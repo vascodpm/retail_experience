@@ -114,7 +114,7 @@ def create_router(handler: MainHandler, CONFIG):
 
         # Calling the function selected
         function_response = await available_functions[function_name](function_arguments)
-        #print("function_response", function_response)
+        print("function_response", function_response)
      
         return {"response": function_response}
 

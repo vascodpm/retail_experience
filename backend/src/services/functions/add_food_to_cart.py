@@ -4,13 +4,13 @@ from tenacity import retry, wait_random, stop_after_attempt
 async def add_food_to_cart(
         CONFIG,
         restaurant_uuid: str=None,
-        food_id: str=None,
-        quantity: int=1,
+        product_id: str=None,
+        product_quantity: int=1,
 ):
     return {
         "response": {
-            "restaurant_uuid": str(restaurant_uuid),
-            "food_id": str(food_id),
-            "quantity": int(quantity)
+            "restaurant_uuid": 1,
+            "product_id": str(product_id),
+            "product_quantity": int(product_quantity)
         }
     }

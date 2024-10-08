@@ -89,22 +89,19 @@ functions:
   #   required: [restaurant_uuid]
   #   allow: true
 
-  # - name: add_food_to_cart
-  #   description: This function adds food to the user's shopping cart. It should only be called if you have the information of the restaurant_id, food_id and amount (quantity) of the food the user is referring to. You can get more information of the restaurant_id opened in the users interface by calling the get_user_actions and you can get the food_id by calling the get_menu_of_restaurant function. You can call this function multiple times in a row if there are several food items to be added
-  #   parameters:
-  #     type: object
-  #     properties:
-  #       restaurant_uuid:
-  #         type: string
-  #         description: The id of the restaurant page that comes in the function get_restaurant_pages previously called, or in the get_user_actions function if the user opened a restaurant page
-  #       food_id:
-  #         type: string
-  #         description: The id of the food that comes in the function get_menu_of_restaurant previously called
-  #       quantity:
-  #         type: integer
-  #         description: The quantity of the food that the user wants to add to the cart
-  #   required: [restaurant_uuid, food_id, quantity]
-  #   allow: true
+  - name: add_food_to_cart
+    description: This function adds food to the user's shopping cart. It should only be called if you have the information of the product_id and product_quantity (quantity) of the food the user is referring to. 
+    parameters: 
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The id of the food that comes in the function get_menu_of_restaurant previously called
+        product_quantity:
+          type: integer
+          description: The quantity of the food that the user wants to add to the cart
+    required: [product_id, product_quantity]
+    allow: true
 
   # - name: remove_food_from_cart
   #   description: This function removes food from the user's shopping cart. It should only be called if you have the information of the restaurant_id and food_id of the food the user is referring to. You can get more information of the restaurant_id opened in the users interface by calling the get_user_actions and you can get the food_id by calling the get_menu_of_restaurant function. You can call this function multiple times in a row if there are several food items to be removed

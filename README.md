@@ -1,12 +1,14 @@
 # retail_experience
 GenAI to improve retail shopping experience
 
+This project was "heavily" inspired on https://github.com/lucastononro/llm-food-delivery/ project.
+
 # 1. Project
 
 ## 1.1. Goal 
-Developing a voice assistant that accurately understands user commands is a complex challenge, especially when users express the same intent in varied ways.
+Develop a voice assistant that accurately understands user commands is a complex challenge, especially when users express the same intent in varied ways.
 
-The goal of this project is to demonstrate how a Generative AI (GenAI) can be effectively programmed to understand and respond to voice commands, regardless of how the user phrases their request.
+The goal of this project is to demonstrate how a Generative AI (GenAI) can be effectively understand and respond to voice commands, regardless of how the user phrases their request.
 
 For example, whether the user says, "filter by white chocolate," "select white chocolate," or "show me white chocolate," the assistant will be able to interpret the intent and execute the correct action. This project showcases how AI can bridge the gap between varied natural language inputs and precise command execution.
 
@@ -16,8 +18,9 @@ Traditional rule-based systems or conventional NLP models struggle when users ph
 Generative AI excels at understanding diverse and nuanced language inputs:
  - Linguistic Flexibility: Users can phrase the same intent in different ways, like "filter by white chocolate" or "show me white chocolate." GenAI can recognize the intent and act accordingly.
  - Contextual Understanding: GenAI grasps context, allowing it to understand both direct and indirect requests.
- - Scalability: It learns from data, handling new commands without needing pre-programmed variations.
  - Enhanced User Experience: Users can speak naturally, and the AI will adapt, making interactions more intuitive and seamless.
+
+
 
 
 # 5. Quick set-up

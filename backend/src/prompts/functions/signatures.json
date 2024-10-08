@@ -46,6 +46,27 @@
         ]
     },
     {
+        "name": "add_food_to_cart",
+        "description": "This function adds food to the user's shopping cart. It should only be called if you have the information of the product_id and product_quantity (quantity) of the food the user is referring to.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string",
+                    "description": "The id of the food that comes in the function get_menu_of_restaurant previously called"
+                },
+                "product_quantity": {
+                    "type": "integer",
+                    "description": "The quantity of the food that the user wants to add to the cart"
+                }
+            }
+        },
+        "required": [
+            "product_id",
+            "product_quantity"
+        ]
+    },
+    {
         "name": "activate_handsfree",
         "description": "This function activates a handsfree chat experience where you are always answering by voice to the user interface",
         "parameters": {

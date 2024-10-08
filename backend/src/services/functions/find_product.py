@@ -12,7 +12,6 @@ async def find_product(
         price=None,
         category=None,
         other_information=None,
-
 ):
     query = get_query(
         name_of_product=name_of_product,
