@@ -264,7 +264,7 @@
           let answer = responseObject.response
           let functionCallSignal = responseObject.function_call
 
-          this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
+          // this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
 
           // If we don't have to function call it will return the answer
           if (functionCallSignal == false || functionCallSignal == null) {
@@ -285,6 +285,7 @@
           else {
             this.handleFunctionCall(functionCallSignal)
               .then((functionCallOutput) => {
+                this.$refs.restaurantsContainer.getRestaurants();
                 if (functionCallSignal.name === "get_products") {
                   // Now, call getRestaurants to refresh the restaurant list
                   // this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
