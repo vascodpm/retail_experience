@@ -280,12 +280,13 @@
             )
             this.botTyping = false
             this.scrollDown()
+            this.$refs.restaurantsContainer.getRestaurants(); //temporary fix
           }
           // if there's a function call, we call the function and get the answer, incorporate to the history and  call the function again
           else {
             this.handleFunctionCall(functionCallSignal)
               .then((functionCallOutput) => {
-                this.$refs.restaurantsContainer.getRestaurants();
+                
                 if (functionCallSignal.name === "get_products") {
                   // Now, call getRestaurants to refresh the restaurant list
                   // this.$refs.restaurantsContainer.getRestaurants(); // Temporary fix
